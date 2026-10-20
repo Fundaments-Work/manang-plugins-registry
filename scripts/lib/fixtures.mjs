@@ -112,7 +112,7 @@ export async function writeFixtureRepo(dir, spec) {
 export async function writeSampleFixtures(dir) {
   // The real first-party manifest, version bumped, with the stub wasm.
   const real = await readFile(
-    path.join(REGISTRY_ROOT, "../plugins/word-count/manifest.toml"),
+    path.join(REGISTRY_ROOT, "test/fixtures/word-count/manifest.toml"),
     "utf8",
   );
   const wordCount = (version) =>

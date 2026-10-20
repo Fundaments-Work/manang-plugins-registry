@@ -1,0 +1,15 @@
+[plugin]
+name = "word-count"
+version = "0.1.0"
+description = "Counts words, characters and lines in the active document or in text you pass."
+
+[permissions]
+# Only needed when no text is supplied: the plugin then reads the open document.
+buffer = ["read:active"]
+
+[contributes]
+hooks = ["on_lint"]
+
+[[contributes.commands]]
+id = "word-count.count"
+title = "Count words"
