@@ -1,0 +1,7 @@
+# Sample entry. It points at the offline fixture tree made by
+# `pnpm run demo` (scripts/lib/fixtures.mjs), not at a real repository.
+# To list a real plugin, copy this file to plugins/<id>.toml and change `repo`.
+id = "word-count"
+repo = "https://github.com/Fundaments-Work/manang-word-count"
+tags = ["writing", "statistics"]
+release_asset_pattern = "word-count-*.manangplugin"

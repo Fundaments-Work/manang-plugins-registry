@@ -1,0 +1,87 @@
+name: Registry
+
+# Minutes are a budget, so this is as small as it can be:
+#  * validate: pull requests that touch entries, tooling or the workflow only, one cheap job.
+#  * build:    on demand only (Actions > Registry > Run workflow). Builds and signs
+#              the index and uploads it as a workflow artifact. Publishing it to
+#              R2 is a manual step (docs/ops/registry.md). Nothing is scheduled.
+on:
+  pull_request:
+    paths:
+      - "plugins/**"
+      - "samples/**"
+      - "schema/**"
+      - "scripts/**"
+      - "test/**"
+      - "worker/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/registry.yml"
+  workflow_dispatch:
+    inputs:
+      registry_url:
+        description: "Base URL of the live registry, to refuse changes to versions already published (optional)"
+        required: false
+        type: string
+
+concurrency:
+  group: registry-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate entries
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      # The tools' own offline tests (a few seconds), then the real entries:
+      # this downloads each listed release asset and checks it.
+      - run: pnpm test
+      - run: pnpm run validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: Build and sign the index
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Build and sign
+        run: |
+          args=""
+          if [ -n "$REGISTRY_URL" ]; then
+            curl -fsS "$REGISTRY_URL/index.json" -o previous-index.json
+            args="--previous previous-index.json"
+          fi
+          pnpm run build --out dist $args
+        env:
+          REGISTRY_URL: ${{ inputs.registry_url }}
+          REGISTRY_SIGNING_KEY: ${{ secrets.REGISTRY_SIGNING_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: registry-dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 14

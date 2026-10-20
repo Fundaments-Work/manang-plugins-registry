@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://manang.invalid/schema/registry-stats.schema.json",
+  "title": "Manang registry stats.json",
+  "type": "object",
+  "required": ["downloads"],
+  "additionalProperties": false,
+  "properties": {
+    "downloads": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$" },
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    }
+  }
+}

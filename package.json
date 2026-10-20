@@ -1,0 +1,34 @@
+{
+  "name": "manang-registry",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Manang plugin registry: entry validation, signed index builder and key tooling. The hosted Worker lives in worker/.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.18.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "build": "node scripts/build-index.mjs",
+    "keygen": "node scripts/keygen.mjs",
+    "verify": "node scripts/verify-index.mjs",
+    "demo": "node scripts/demo.mjs",
+    "test": "node --test --test-reporter=spec test/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "smol-toml": "1.9.1",
+    "spdx-expression-parse": "5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "fflate": "0.8.3",
+    "prettier": "3.9.10",
+    "typescript": "5.9.3"
+  }
+}
