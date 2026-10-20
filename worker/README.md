@@ -2,7 +2,7 @@
 
 A read-only front for one R2 bucket that holds the built registry (`index.json`,
 `index.json.sig`, `stats.json`, `plugins/...`, produced by
-`registry/scripts/build-index.mjs`). The Worker never writes the bucket. Full
+`scripts/build-index.mjs`). The Worker never writes the bucket. Full
 operating guide: `docs/ops/registry.md`.
 
 ## What it serves
@@ -39,7 +39,7 @@ pnpm install
 pnpm test                 # workerd + in-memory R2, no account needed
 pnpm run typecheck
 
-# Serve a local build from the registry/ folder:
+# Serve a local build from the repository root:
 pnpm run dev              # http://localhost:8788 (not 1420)
 # in another shell, load a built registry into the LOCAL bucket:
 cd .. && pnpm run demo    # makes demo-out/dist
