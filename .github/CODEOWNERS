@@ -1,0 +1,8 @@
+# Everything needs a maintainer's review; security-sensitive areas are listed so they are never missed.
+*                  @sapienskid
+/plugins/          @sapienskid
+/schema/           @sapienskid
+/scripts/          @sapienskid
+/worker/           @sapienskid
+/.github/          @sapienskid
+/SECURITY.md       @sapienskid
