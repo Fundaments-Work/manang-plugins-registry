@@ -1,0 +1,41 @@
+# Manang plugin registry. Placeholder names; no account id, no secrets.
+# `wrangler deploy` uses the account you are logged in to.
+name = "manang-registry"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+# Served at registry.fundaments.work (single-level name: the zone certificate covers it).
+routes = [
+  { pattern = "registry.fundaments.work", custom_domain = true },
+]
+
+# The registry must not record who downloaded what: no request logs, no
+# invocation logs, no traces. The only thing kept is a counter per plugin.
+[observability]
+enabled = false
+
+# The built registry tree (index.json, index.json.sig, stats.json, plugins/...)
+# lives in this bucket. Create it once with:
+#   wrangler r2 bucket create manang-registry
+[[r2_buckets]]
+binding = "ARTIFACTS"
+bucket_name = "manang-registry"
+
+[[durable_objects.bindings]]
+name = "COUNTER"
+class_name = "Counter"
+
+[[durable_objects.bindings]]
+name = "LIMITER"
+class_name = "Limiter"
+
+# SQLite-backed classes (the only kind on the Workers Free plan). Counter keeps
+# one row per plugin id; Limiter keeps nothing on disk.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Counter", "Limiter"]
+
+[vars]
+# Requests per client address per minute (hashed, in memory only, never
+# stored). 0 turns the limit off.
+RATE_REQS_PER_MIN = "600"

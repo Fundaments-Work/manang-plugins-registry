@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://manang.invalid/schema/registry-entry.schema.json",
+  "title": "Manang registry entry (registry/plugins/<id>.toml, parsed)",
+  "description": "What an author types. Everything else (name, version, size, hash, permissions) is read from the release's manifest by the build script, never typed by hand.",
+  "type": "object",
+  "required": ["id", "repo", "tags", "release_asset_pattern"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "Equals the file name, the manifest's [plugin] name, and is kebab-case.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 48
+    },
+    "repo": {
+      "description": "The author's GitHub repository, whose releases hold the .manangplugin assets.",
+      "type": "string",
+      "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+      "maxLength": 200
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,23}$" }
+    },
+    "readme": {
+      "description": "File name of the readme inside the archive. Optional: the first README* is used.",
+      "type": "string",
+      "pattern": "^README([.-][A-Za-z0-9._-]*)?$",
+      "maxLength": 64
+    },
+    "yanked": {
+      "description": "Versions to leave out of the index (a takedown). Maintainers add to it; authors do not.",
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+      }
+    },
+    "release_asset_pattern": {
+      "description": "Which release asset is the plugin. `*` matches any run of characters. Must end in .manangplugin.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._*-]+\\.manangplugin$",
+      "maxLength": 120
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Sample entry for a plugin that asks for filesystem and network access, so the
+# index shows its permissions. Fixture only; replace `repo` with a real one.
+id = "citation-tools"
+repo = "https://github.com/example/manang-citation-tools"
+tags = ["references", "citations"]
+readme = "README.md"
+release_asset_pattern = "*.manangplugin"

@@ -1,0 +1,8 @@
+node_modules
+dist
+.wrangler
+# Local demo output, and any private key that ended up in a working copy.
+demo-out
+*.key
+*.pem
+previous-index.json
