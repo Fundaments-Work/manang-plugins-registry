@@ -9,7 +9,7 @@
 
 For plugin authors. The registry is a reviewed list: you keep your plugin in your
 own GitHub repository and publish versions as GitHub releases; a pull request to
-a pull request to this repository lists it. Manang then mirrors each reviewed version,
+this repository lists it. Manang then mirrors each reviewed version,
 hashes it, signs the index, and shows the plugin in **Plugins > Browse**.
 
 Building a plugin is covered in `docs/plugin-guide.md` in the `manang-sdk` repository. This page is about getting it

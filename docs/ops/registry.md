@@ -149,7 +149,7 @@ reach them first.
 `yanked` list and open a PR.
 
 ```toml
-# registry/plugins/<id>.toml
+# plugins/<id>.toml
 yanked = ["0.3.1"]
 ```
 
